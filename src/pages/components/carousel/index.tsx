@@ -6,24 +6,28 @@ import { useEffect, useState } from 'react';
 import useAxios from 'axios-hooks'
 
 export const MagicCarousel = () => {
+    // Fetch spells using axios hook
     const [slides, setSlides] = useState<Spell[]>([]);
     const [page, setPage] = useState(1)
     const [{ data, loading, error }] = useAxios(
         `https://startplaying.games/api/detect-magic/spells?page=${page}`,
     )
   
+    // on hook finished loading, push spells into state
     useEffect(() => {         
         if (loading === false) {
             setSlides((currentSlides) => [...currentSlides, ...data.spells])
         }
     }, [data, loading])
 
+    // when the current slide gets close to the end of the array, update page state var to trigger axios to fetch the next page
     function load(currentSlide: number) {
         if (slides.length - currentSlide < 4 && loading !== true) {
             setPage(page + 1);
         }
     }
 
+    // Defined variables for the carousel
     const settings = {
         className: "center",
         centerMode: true,
@@ -37,6 +41,8 @@ export const MagicCarousel = () => {
         initialSlide: 0
     };
 
+    // Render nothing until the slides have loaded
+    // Normally I would use a spinner or skeleton, but the API is so fast it doesn't really matter
     if (loading && slides.length === 0) {
         return <></>
     }
@@ -51,7 +57,7 @@ export const MagicCarousel = () => {
                 <Flex justifyContent="center" alignItems="center" height="100%">
                     <Box width="100%" alignItems="center">
                         <Slider {...settings} lazyLoad="anticipated" afterChange={load}>
-                            {slides.map((el, index) => <CarouselItem index={index} key={index} item={el}/>)}
+                            {slides.map((el, index) => <CarouselItem key={index} item={el}/>)}
                         </Slider>                      
                     </Box>                
                 </Flex>                
