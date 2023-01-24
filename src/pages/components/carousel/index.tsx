@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Spinner } from '@chakra-ui/react';
 import Slider from "react-slick";
 import Head from "next/head";
 import { CarouselItem, Spell } from '../carousel-item';
@@ -33,8 +33,13 @@ export const MagicCarousel = () => {
         speed: 200,
         arrows: false,
         centerPadding: "10%",
-        focusOnSelect: loading === false
+        focusOnSelect: loading === false,
+        initialSlide: 0
     };
+
+    if (loading && slides.length === 0) {
+        return <></>
+    }
 
     return (
         <>
@@ -47,7 +52,7 @@ export const MagicCarousel = () => {
                     <Box width="100%" alignItems="center">
                         <Slider {...settings} lazyLoad="anticipated" afterChange={load}>
                             {slides.map((el, index) => <CarouselItem index={index} key={index} item={el}/>)}
-                        </Slider>                            
+                        </Slider>                      
                     </Box>                
                 </Flex>                
             </Box>
