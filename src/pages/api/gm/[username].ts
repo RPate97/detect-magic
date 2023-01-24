@@ -55,16 +55,13 @@ async function insertGM(username: string, res: NextApiResponse<Data>, db: any) {
     })
 } 
 
-function updateGM(username: string, res: NextApiResponse<Data>, db: any) {
-  db.run(`UPDATE gms SET popularity = popularity + 1 WHERE username = "${username}"`);
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
   const { username } = req.query
 
+  // ensure the query variable is the required type
   if (typeof username !== "string") {
     // return an error response
     res.status(500).json({ error: 'you must specify exactly one username' })
